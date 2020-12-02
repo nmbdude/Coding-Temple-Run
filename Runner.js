@@ -1,13 +1,15 @@
-var resp = prompt("");
-var question = alert("");
 var prompts = ['Jump!', 'Slide!', 'Turn Left!', 'Turn Right'];
 var random = getRandomInt(3);
 var isDead = false;
 var buttonPressed = false;
 var buttonType = "up";
 var loopNum = 0;
-var waitTime = 2;
+var waitTime = 2000;
+var newCommand = false;
 start();
+function getRandomInt(max){
+    return Math.floor(Math.random() * Math.floor(max));
+  }
 function start(){
     console.log(random);
     console.log(prompts);
@@ -16,21 +18,26 @@ function start(){
     printPrompt(2);
     printPrompt(3);
     while(loopNum<=200){
-        console.log(loopNum);
-        buttonWait(waitTime);
-        if(isDead==true){
-            exit();
-        }
+        if(newCommand==false){
+            newCommand=true;
+            console.log(loopNum);
+            setTimeout(() => {
+                if(isDead==true){
+                console.log("You Died!");
+                setTimeout(() => {
+                    exit();
+                }, 100)
+            }, waitTime);
+            
+                
+            }
     }
 
 }
-function getRandomInt(max){
-    return Math.floor(Math.random() * Math.floor(max));
-  }
+
 function printPrompt(index){
     if(random==index){
         console.log(prompts[index]);
-        command = index;
         loopNum++;
     }
 }
@@ -59,10 +66,11 @@ function exit(status) {//I didn't write this, this is just to kill the program
 }
 function buttonWait(wait){
     if(buttonPressed==false){
-        delay(wait);
-        if(buttonPressed==false){
-            isDead=true;
-        }
+        setTimeout(() => {
+            if(buttonPressed==false){
+                isDead=true;
+            }
+        }, wait)
     }
 }
 document.addEventListener('keydown', function(event) {
@@ -79,6 +87,7 @@ document.addEventListener('keydown', function(event) {
     if(event.keyCode == 38){
         if(buttonType=="jump"){
             buttonPressed = true;
+            jump();
         }
     }
     if(event.keyCode == 40){
@@ -99,5 +108,11 @@ function keyType(index){
     }
     if(index==3){
         keyType = "turn right"
+    }
+}
+}
+function jump(){
+    if(keyType=="jump"){
+        newCommand=false;
     }
 }
